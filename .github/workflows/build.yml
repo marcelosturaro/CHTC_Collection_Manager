@@ -27,11 +27,24 @@ jobs:
             dist/*.AppImage
             dist/*.deb
   release:
+    # Publishes the installers on the "Releases" page, both for tags (v1.0.0) and for manual runs.
     needs: build
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+      - id: v
+        run: echo "tag=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+        if: github.ref_type == 'tag'
+      - id: v2
+        run: echo "tag=v$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+        if: github.ref_type != 'tag'
       - uses: actions/download-artifact@v4
         with: { path: artifacts, merge-multiple: true }
+      - run: ls -R artifacts
       - uses: softprops/action-gh-release@v2
-        with: { files: artifacts/* }
+        with:
+          tag_name: ${{ steps.v.outputs.tag || steps.v2.outputs.tag }}
+          name: CHTC Collection Manager ${{ steps.v.outputs.tag || steps.v2.outputs.tag }}
+          files: artifacts/*
+          make_latest: true
