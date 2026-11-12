@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>CHTC Collection Manager</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111513"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="CHTC"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="assets/icon-192.png">
+<script src="config.js"></script>
+<style>
+:root{--ink:#111513;--g:#1f5c45;--g2:#e5efe9;--a:#c9871f;--bg:#f3f4f2;--card:#fff;--ln:#dde1dd;--mut:#65706a;--r:10px}
+*{box-sizing:border-box}body{margin:0;font:14px/1.45 "Segoe UI",system-ui,-apple-system,Roboto,sans-serif;color:var(--ink);background:var(--bg);display:grid;grid-template-columns:230px 1fr;min-height:100vh}
+aside{background:#fff;border-right:1px solid var(--ln);padding:18px 14px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:4px}
+.brand{display:flex;gap:10px;align-items:center;padding:4px 6px 18px}.brand img{width:46px;height:46px}.brand b{font-size:19px;letter-spacing:.5px;display:block;line-height:1}.brand span{font-size:11.5px;color:var(--mut)}
+nav button{all:unset;display:flex;gap:10px;align-items:center;width:100%;padding:9px 12px;border-radius:8px;cursor:pointer;color:#3b4540;font-weight:500}
+nav button:hover{background:var(--bg)}nav button.on{background:var(--ink);color:#fff}nav svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.qs{display:grid;gap:6px;padding:14px 6px 0;margin-top:8px;border-top:1px solid var(--ln)}.qs .b{width:100%}.stamp{margin-top:auto;font-size:12px;color:var(--mut);padding:8px 6px;border-top:1px solid var(--ln)}
+main{padding:26px 30px;min-width:0}h1{font-size:22px;margin:0 0 4px}h3{margin:0 0 12px;font-size:14px}.sub{color:var(--mut);margin:0 0 18px}
+.card{background:var(--card);border:1px solid var(--ln);border-radius:var(--r);padding:16px 18px}
+.hero{display:flex;align-items:center;gap:26px;margin-bottom:16px}.hero img{height:84px}.hero p{margin:2px 0 0;color:var(--mut)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:16px}.stats .card b{font-size:26px;display:block;color:var(--g)}.stats .card span{color:var(--mut);font-size:12.5px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:14px}.wide{grid-column:1/-1}
+.br{display:grid;grid-template-columns:130px 1fr 34px;gap:8px;align-items:center;margin:5px 0;font-size:13px}.br span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.br b{text-align:right}
+.tr{background:var(--g2);border-radius:4px;height:10px}.tr i{display:block;height:100%;background:var(--g);border-radius:4px}
+.cols{display:flex;align-items:flex-end;gap:4px;height:150px}.cols div{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;font-size:10px;color:var(--mut)}.cols i{display:block;width:100%;background:var(--g);border-radius:3px 3px 0 0;min-height:2px}
+.dn{display:flex;gap:18px;align-items:center}.dn .ring{width:120px;height:120px;border-radius:50%;flex:none;position:relative}.dn .ring:after{content:"";position:absolute;inset:26px;background:#fff;border-radius:50%}
+.lg div{font-size:13px;margin:3px 0}.lg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:7px}
+.tb{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center}.tb .sp{flex:1}
+input,select,textarea,button.b{font:inherit}input,select,textarea{border:1px solid var(--ln);border-radius:8px;padding:8px 10px;background:#fff;width:100%}input:focus,select:focus,textarea:focus{outline:2px solid var(--g);outline-offset:-1px}
+.tb input{width:260px}.tb select{width:auto}
+button.b{border:1px solid var(--ln);background:#fff;border-radius:8px;padding:8px 14px;cursor:pointer;font-weight:500}button.b:hover{background:var(--bg)}button.p{background:var(--g);color:#fff;border-color:var(--g)}button.p:hover{background:#174a38}button.d{color:#a33;border-color:#e3c3c3}
+table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--ln);border-radius:var(--r);overflow:hidden}th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--ln);white-space:nowrap}th{background:#fafbfa;font-size:12.5px;color:var(--mut);cursor:pointer;user-select:none}tr.r{cursor:pointer}tr.r:hover td{background:var(--g2)}td em{font-style:italic}
+.pill{display:inline-block;padding:1px 9px;border-radius:99px;background:var(--g2);color:var(--g);font-size:12px}.pill.x{background:#f6e7e0;color:#9a4a2a}
+.tw{overflow:auto;max-height:calc(100vh - 170px);border-radius:var(--r)}.empty{text-align:center;padding:50px;color:var(--mut)}.empty img{width:300px;max-width:70%;opacity:.9;margin-bottom:10px}
+#modal{position:fixed;inset:0;background:#0007;display:none;justify-content:center;align-items:flex-start;padding:28px;overflow:auto;z-index:9}#modal.on{display:flex}
+.mb{background:var(--bg);border-radius:14px;width:min(980px,100%);padding:22px 24px}.mb h2{margin:0 0 14px}
+fieldset{border:1px solid var(--ln);border-radius:var(--r);background:#fff;margin:0 0 14px;padding:12px 16px 16px}legend{font-weight:600;padding:0 6px;color:var(--g)}
+.g{display:grid;grid-template-columns:repeat(3,1fr);gap:10px 14px}.g label{font-size:12.5px;color:var(--mut);display:block}.g input,.g textarea{margin-top:3px;color:var(--ink)}.g .w2{grid-column:span 3}textarea{min-height:58px;resize:vertical}
+.dw{float:right;font:10.5px ui-monospace,Menlo,Consolas,monospace;color:#9aa39d}.pm{margin-top:12px;height:230px;border-radius:8px;overflow:hidden;border:1px solid var(--ln);background:var(--g2);display:flex;align-items:center;justify-content:center;color:var(--mut)}.pm iframe{width:100%;height:100%;border:0}
+.ft{display:flex;gap:10px;position:sticky;bottom:0;background:var(--bg);padding-top:10px}.ft .sp{flex:1}.err{color:#a33;margin-right:10px;align-self:center}
+#toast{position:fixed;right:22px;bottom:22px;background:var(--ink);color:#fff;padding:10px 16px;border-radius:8px;display:none;z-index:20}#toast.er{background:#a33}
+#gm{height:calc(100vh - 190px);border-radius:var(--r);border:1px solid var(--ln)}.set{max-width:720px;display:grid;gap:14px}.set p{margin:4px 0 10px;color:var(--mut)}.row{display:flex;gap:8px}.row input{flex:1}code{background:var(--bg);padding:1px 6px;border-radius:5px}
+#acct{margin-top:auto;border:0;padding-bottom:0}#acct+.stamp{margin-top:0}.lk aside .qs{display:none}
+@media(max-width:900px){aside{position:sticky;top:0;height:auto;flex-direction:row;flex-wrap:wrap;align-items:center;gap:4px 8px;padding:8px 10px;z-index:5;border-right:0;border-bottom:1px solid var(--ln)}.brand{padding:0}.brand img{width:34px;height:34px}.brand span,.stamp{display:none}nav{display:flex;order:3;width:100%;overflow-x:auto;gap:2px}nav button{width:auto;padding:7px 10px}.qs{display:flex;margin:0 0 0 auto;padding:0;border:0}.qs input{width:120px}.qs .b{width:auto;white-space:nowrap}#acct{margin:0;padding:0;font-size:11px}main{padding:14px 12px}#modal{padding:8px}.mb{padding:14px}.stats{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}.hero img{height:56px}
+body{grid-template-columns:1fr}.g{grid-template-columns:1fr 1fr}.g .w2{grid-column:span 2}}
+@media(max-width:600px){.g{grid-template-columns:1fr}.g .w2{grid-column:auto}.tb input{width:100%}}
+</style></head><body>
+<aside>
+ <div class="brand"><img src="assets/emblem.png" alt=""><div><b>CHTC</b><span>Collection Manager</span></div></div>
+ <nav id="nav"></nav>
+ <div class="qs"><input id="qs" placeholder="USB scanner / type voucher…" onkeydown="if(event.key==='Enter')quick(this.value)"><button class="b" onclick="scanOpen()">Scan QR with camera</button></div><div class="stamp" id="acct"></div><div class="stamp" id="stamp">Loading…</div>
+</aside>
+<main id="main"></main>
+<div id="modal"><div class="mb" id="mb"></div></div><div id="toast"></div>
+<input type="file" id="fi" hidden>
+<script>
+const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const A=window.api,CF='CHTC_database.json';
+// key, label (also CSV header), section, kind ('a' = text area), placeholder
+const F=[['voucher','Voucher Number','Identification','','CHTC 00001'],['order','Order','Identification'],['family','Family','Identification'],['genus','Genus','Identification'],['species','Species','Identification'],['detBy','Determined by','Identification'],
+['country','Country','Locality'],['state','State','Locality'],['municipality','Municipality','Locality'],['locality','Locality','Locality','a'],['lat','Latitude','Locality','','-23.5505'],['lon','Longitude','Locality','','-46.6333'],['coordSource','Coordinates Sources','Locality'],
+['collectors','Collector(s)','Collecting'],['fieldNumber','Field Number','Collecting'],['date','Date Collected (YYYY-MM-DD)','Collecting','','2024-05-17'],['sex','Sex','Collecting'],['fieldNotes','Field Notes','Collecting','a'],['remarks','Remarks','Collecting','a'],
+['prep','Preparation','Specimen'],['pres','Preservation','Specimen'],['mass','Mass','Specimen','','g'],['svl','SVL','Specimen','','mm'],['tail','Tail','Specimen','','mm'],['photo','Photo','Specimen'],['call','Call recording','Specimen'],
+['tissueSample','Tissue Sample','Tissue & DNA'],['tissuePres','Tissue preservation','Tissue & DNA'],['tissueBox','Tissue Box','Tissue & DNA'],['tissueBoxLoc','Tissue Box Location','Tissue & DNA'],['dnaBox','DNA Box','Tissue & DNA'],['dnaBoxLoc','DNA Box Location','Tissue & DNA'],
+['depDate','Deposited date','Curation','','2024-06-01'],['depBy','Deposited by','Curation'],['collLoc','Collection Location','Curation'],['status','Status','Curation'],
+['loanDate','Loan Date (YYYY-MM-DD)','Loan','','2026-01-15'],['loanBorrower','Borrower','Loan'],['loanInst','Institution','Loan'],['loanDept','Department','Loan'],['loanPos','Position','Loan'],['loanEmail','Email','Loan','','name@institution.edu'],['loanPhone','Phone','Loan'],['loanPeriod','Loan Period (days)','Loan','','180'],['loanReturned','Date Returned (YYYY-MM-DD)','Loan']];
+const K=F.map(f=>f[0]);
+const DWC={voucher:'catalogNumber',order:'order',family:'family',genus:'genus',species:'scientificName',detBy:'identifiedBy',country:'country',state:'stateProvince',municipality:'municipality',locality:'locality',lat:'decimalLatitude',lon:'decimalLongitude',coordSource:'georeferenceSources',collectors:'recordedBy',fieldNumber:'recordNumber',date:'eventDate',sex:'sex',fieldNotes:'fieldNotes',remarks:'occurrenceRemarks',prep:'preparations',pres:'preparations',mass:'dynamicProperties',svl:'dynamicProperties',tail:'dynamicProperties',photo:'associatedMedia',call:'dynamicProperties',tissueSample:'dynamicProperties',tissuePres:'dynamicProperties',tissueBox:'dynamicProperties',tissueBoxLoc:'dynamicProperties',dnaBox:'dynamicProperties',dnaBoxLoc:'dynamicProperties',depDate:'dynamicProperties',depBy:'dynamicProperties',collLoc:'dynamicProperties',status:'disposition'};
+const CC={Brazil:'BR',Argentina:'AR',Bolivia:'BO',Chile:'CL',Colombia:'CO',Ecuador:'EC',Guyana:'GY',Paraguay:'PY',Peru:'PE',Suriname:'SR',Uruguay:'UY',Venezuela:'VE','French Guiana':'GF',Panama:'PA','Costa Rica':'CR',Mexico:'MX','United States':'US'};
+const dw=()=>({inst:'CHTC',coll:'Herpetology',datum:'WGS84',...(S.set.dwc||{})});
+const cls=o=>/anura|caudata|gymnophiona|urodela|apoda/i.test(o)?'Amphibia':/squamata|testudines|crocodylia|rhynchocephalia/i.test(o)?'Reptilia':'';
+function dwcRow(r){const d=dw(),p={};[['mass','mass'],['svl','SVL'],['tail','tail'],['tissueSample','tissueSample'],['tissuePres','tissuePreservation'],['tissueBox','tissueBox'],['tissueBoxLoc','tissueBoxLocation'],['dnaBox','DNABox'],['dnaBoxLoc','DNABoxLocation'],['call','callRecording'],['depDate','depositedDate'],['depBy','depositedBy'],['collLoc','collectionLocation']].forEach(([k,n])=>{if(r[k])p[n]=r[k]});
+ const g=hasGeo(r);return{occurrenceID:`urn:catalog:${d.inst}:${d.coll}:${r.voucher}`,basisOfRecord:'PreservedSpecimen',type:'PhysicalObject',institutionCode:d.inst,collectionCode:d.coll,catalogNumber:r.voucher,occurrenceStatus:'present',disposition:r.status,recordedBy:r.collectors,recordNumber:r.fieldNumber,eventDate:r.date,sex:r.sex,preparations:[r.prep,r.pres].filter(Boolean).join(' | '),associatedMedia:r.photo,
+ kingdom:'Animalia',phylum:'Chordata',class:cls(r.order),order:r.order,family:r.family,genus:r.genus,specificEpithet:epi(r),scientificName:sp(r),identifiedBy:r.detBy,country:r.country,countryCode:CC[r.country]||'',stateProvince:r.state,municipality:r.municipality,locality:r.locality,decimalLatitude:g?+r.lat:'',decimalLongitude:g?+r.lon:'',geodeticDatum:g?d.datum:'',georeferenceSources:r.coordSource,fieldNotes:r.fieldNotes,occurrenceRemarks:r.remarks,dynamicProperties:Object.keys(p).length?JSON.stringify(p):'',modified:new Date(r.upd||Date.now()).toISOString(),language:'en'}}
+function expDwC(){const l=R().map(dwcRow);if(!l.length)return toast('No specimens to export.',1);const h=Object.keys(l[0]);
+ download(`CHTC_DarwinCore_${today()}.csv`,'\uFEFF'+[h.map(q).join(',')].concat(l.map(r=>h.map(k=>q(r[k])).join(','))).join('\r\n'),'text/csv');toast('Darwin Core occurrence file exported')}
+const L={sex:['Male','Female','Undetermined'],tissueSample:['None'],call:['Yes','No'],prep:['Fluid','Skeleton','Skin','Cleared and stained','Whole specimen'],pres:['70% ethanol','Formalin 10%','Dry'],tissuePres:['95% ethanol','Frozen','RNAlater','Lysis buffer'],coordSource:['GPS','Google Maps','Google Earth','Map','Locality description'],status:['Available','On loan','Missing','Exchanged','Destroyed'],order:['Squamata','Anura','Testudines','Crocodylia','Gymnophiona','Caudata']};
+const norm=s=>String(s).toLowerCase().replace(/[^a-z0-9]/g,'');
+const ALIAS={depositeddata:'depDate',datecollected:'date',coordinatessource:'coordSource',coordinatesources:'coordSource',collector:'collectors',callrecordings:'call',catalognumber:'voucher',specificepithet:'species',stateprovince:'state',county:'municipality',recordedby:'collectors',recordnumber:'fieldNumber',eventdate:'date',georeferencesources:'coordSource',decimallatitude:'lat',decimallongitude:'lon',identifiedby:'detBy',occurrenceremarks:'remarks',associatedmedia:'photo',preparations:'prep',disposition:'status',scientificname:'',taxonorder:'order'};
+const S={sess:null,role:null,auth:{on:false,user:null,role:null,users:{},dk:null},env:null,locked:false,db:{records:[],del:{},dirty:{}},set:{},page:'dash',q:'',fam:'',st:'',sort:'voucher',dir:1,edit:null,mq:''};
+const ICON={dash:'<path d="M3 13h8V3H3zM13 21h8V11h-8zM13 3v6h8V3zM3 21h8v-6H3z"/>',list:'<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',map:'<path d="M12 22s7-6.2 7-12a7 7 0 10-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/>',set:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/>'};
+const NAV=[['dash','Dashboard'],['list','Specimens'],['map','Map'],['set','Settings']];
+
+/* ---------- storage ---------- */
+async function load(){const d=A?await A.read('db.json'):localStorage.getItem('chtc_db'),s=A?await A.read('settings.json'):localStorage.getItem('chtc_set');
+ if(d){const o=JSON.parse(d);if(o.v==2){S.env=o;S.locked=true}else S.db=o}if(s)S.set=JSON.parse(s);S.db.del=S.db.del||{};S.db.dirty=S.db.dirty||{};
+ const C=window.CHTC_CONFIG||{};if(C.url&&C.key&&!S.set.sb)S.set.sb={url:C.url.replace(/\/+$/,''),key:C.key};if(C.mapsKey&&!S.set.mapsKey)S.set.mapsKey=C.mapsKey}
+function merge(o){const m={};[...S.db.records,...(o.records||[])].forEach(r=>{if(!m[r.id]||r.upd>m[r.id].upd)m[r.id]=r});
+ const d={...(o.del||{}),...S.db.del};Object.keys(S.db.del).forEach(i=>d[i]=Math.max(S.db.del[i],(o.del||{})[i]||0));
+ Object.keys(d).forEach(i=>{if(m[i]&&m[i].upd<d[i])delete m[i]});S.db.records=Object.values(m);S.db.del=d}
+async function persist(){const cloud=A&&S.set.cloud&&!S.set.sb;let skip=false;
+ if(cloud){try{const t=await A.cloudRead(cloud,CF);if(t)await ingest(JSON.parse(t))}catch(e){skip=true;toast('Cloud not synced ('+e.message+'). The cloud file was left untouched.',1)}}
+ const j=await pack();try{A?await A.write('db.json',j):localStorage.setItem('chtc_db',j)}catch(e){return toast('Could not save: '+e.message,1)}
+ let ok='Saved locally'+(S.set.sb?S.sess?' · syncing online…':' · offline':'');if(cloud&&!skip){try{await A.cloudWrite(cloud,CF,j);ok='Saved locally + cloud'}catch(e){toast('Cloud save failed: '+e.message,1)}}
+ $('#stamp').textContent=ok+' · '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});if(S.set.sb&&S.sess)syncOnline(true)}
+async function saveSet(){const j=JSON.stringify(S.set);A?await A.write('settings.json',j):localStorage.setItem('chtc_set',j)}
+function toast(m,e){const t=$('#toast');t.textContent=m;t.className=e?'er':'';t.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>t.style.display='none',3800)}
+
+/* ---------- accounts & encryption (AES-256-GCM, PBKDF2) ---------- */
+const enc=new TextEncoder(),dec=new TextDecoder(),can=a=>S.set.sb?(a=='edit'?S.role=='editor'||S.role=='admin':S.role=='admin'):!S.auth.on||(a=='edit'?S.auth.role!='viewer':S.auth.role=='admin');
+const b64=u=>{u=new Uint8Array(u);let s='';for(let i=0;i<u.length;i+=8192)s+=String.fromCharCode.apply(null,u.subarray(i,i+8192));return btoa(s)},ub=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+const kek=async(pw,salt)=>crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:250000,hash:'SHA-256'},await crypto.subtle.importKey('raw',enc.encode(pw),'PBKDF2',false,['deriveKey']),{name:'AES-GCM',length:256},false,['encrypt','decrypt']);
+const seal=async(k,b)=>{const iv=crypto.getRandomValues(new Uint8Array(12));return{iv:b64(iv),ct:b64(await crypto.subtle.encrypt({name:'AES-GCM',iv},k,b))}};
+const unseal=async(k,o)=>new Uint8Array(await crypto.subtle.decrypt({name:'AES-GCM',iv:ub(o.iv)},k,ub(o.ct)));
+async function mkUser(n,pw,role,name){const salt=crypto.getRandomValues(new Uint8Array(16)),raw=await crypto.subtle.exportKey('raw',S.auth.dk);return{salt:b64(salt),wrap:await seal(await kek(pw,salt),raw),role,name:name||n,upd:Date.now()}}
+async function pack(){if(!S.auth.on)return JSON.stringify(S.db);return JSON.stringify({v:2,users:S.auth.users,...await seal(S.auth.dk,enc.encode(JSON.stringify(S.db)))})}
+async function ingest(o){if(!o.v)return merge(o);for(const[n,u]of Object.entries(o.users||{}))if(!S.auth.users[n]||u.upd>S.auth.users[n].upd)S.auth.users[n]=u;merge(JSON.parse(dec.decode(await unseal(S.auth.dk,o))))}
+const admins=()=>Object.values(S.auth.users).filter(u=>!u.removed&&u.role=='admin').length;
+const okUser=u=>/^[a-z0-9._-]{3,}$/.test(u)?'':'Username: 3+ characters (letters, numbers, . _ -).',okPw=p=>p.length>=8?'':'Password needs at least 8 characters.';
+async function login(u,p){u=u.trim().toLowerCase();let env=S.env;
+ if(A&&S.set.cloud)try{const t=await A.cloudRead(S.set.cloud,CF),o=t&&JSON.parse(t);if(o&&o.v==2)env=o}catch(e){}
+ const us=env&&env.users&&env.users[u],bad=new Error('Wrong username or password.');if(!us||us.removed)throw bad;
+ let raw;try{raw=await unseal(await kek(p,ub(us.salt)),us.wrap)}catch(e){throw bad}
+ const prev=S.db,loc=S.env;S.auth={on:true,user:u,role:us.role,users:env.users,dk:await crypto.subtle.importKey('raw',raw,'AES-GCM',true,['encrypt','decrypt'])};
+ S.db=JSON.parse(dec.decode(await unseal(S.auth.dk,env)));S.db.del=S.db.del||{};merge(prev);if(loc&&loc!==env)try{await ingest(loc)}catch(e){}
+ const m=S.auth.users[u];if(!m||m.removed){S.auth={on:false,user:null,role:null,users:{},dk:null};S.db={records:[],del:{}};throw new Error('This account was removed.')}
+ S.auth.role=m.role;S.env=null;S.locked=false;await persist()}
+async function doLogin(){const b=$('#lb');b.disabled=true;try{await login($('#lu').value,$('#lp').value);S.page='dash';render()}catch(e){$('#le').textContent=e.message;b.disabled=false}}
+async function logout(){if(S.set.sb)return logoutOnline();await persist();S.env=JSON.parse(await pack());S.db={records:[],del:{}};S.auth={on:false,user:null,role:null,users:{},dk:null};S.locked=true;S.page='dash';render()}
+function lockHTML(){if(S.set.sb)return onlineLock();return`<div class="card" style="max-width:420px;margin:7vh auto 0;text-align:center"><img src="assets/logo.png" alt="CHTC" style="width:260px;max-width:80%"><h3 style="margin:14px 0">Sign in to the collection database</h3><div style="display:grid;gap:8px"><input id="lu" placeholder="Username" autocomplete="username" autofocus onkeydown="if(event.key==='Enter')$('#lp').focus()"><input id="lp" type="password" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"><div class="err" id="le" style="margin:0"></div><button class="b p" id="lb" onclick="doLogin()">Sign in</button>${A?'<button class="b" onclick="lockCloud()">Connect cloud folder…</button>':''}</div></div>`}
+async function lockCloud(){const f=await A.pickFolder();if(!f)return;S.set.cloud=f;await saveSet();try{const t=await A.cloudRead(f,CF),o=t&&JSON.parse(t);if(o&&o.v==2){S.env=o;toast('Cloud database found. Sign in.')}else toast('No protected CHTC database found in that folder.',1)}catch(e){toast(e.message,1)}}
+async function enableAuth(){const u=$('#au').value.trim().toLowerCase(),p=$('#ap').value,e=okUser(u)||okPw(p)||(p!=$('#ap2').value?'Passwords do not match.':'');if(e)return toast(e,1);
+ S.auth={on:true,user:u,role:'admin',users:{},dk:await crypto.subtle.generateKey({name:'AES-GCM',length:256},true,['encrypt','decrypt'])};S.auth.users[u]=await mkUser(u,p,'admin');await persist();render();toast('User accounts are on. Add your team below.')}
+async function addUser(){const u=$('#nu').value.trim().toLowerCase(),p=$('#np').value,e=okUser(u)||okPw(p)||(S.auth.users[u]&&!S.auth.users[u].removed?'This user already exists.':'');if(e)return toast(e,1);
+ S.auth.users[u]=await mkUser(u,p,$('#nr').value,$('#nn').value.trim());await persist();render();toast('User added')}
+async function setRole(n,r){if(S.auth.users[n].role=='admin'&&r!='admin'&&admins()<2){render();return toast('There must be at least one administrator.',1)}S.auth.users[n].role=r;S.auth.users[n].upd=Date.now();if(n==S.auth.user)S.auth.role=r;await persist();render()}
+async function rmUser(n){if(n==S.auth.user)return toast('You cannot remove your own account.',1);if(S.auth.users[n].role=='admin'&&admins()<2)return toast('There must be at least one administrator.',1);if(!confirm('Remove user '+n+'?'))return;S.auth.users[n]={removed:true,upd:Date.now()};await persist();render()}
+async function setPw(n,id){const p=$('#'+id).value,e=okPw(p);if(e)return toast(e,1);const{role,name}=S.auth.users[n];S.auth.users[n]=await mkUser(n,p,role,name);await persist();render();toast('Password updated')}
+async function expBackup(){if(can('admin'))download('CHTC_backup_'+today()+'.json',await pack(),'application/json')}
+function usersCard(){if(S.set.sb)return'';const a=S.auth;if(!a.on)return`<div class="card"><h3>User accounts</h3><p>Turn on sign-in so only people with an account can open the database, on this computer and in the cloud folder. Data is <b>encrypted</b> (AES-256). Create the first administrator:</p><div class="row"><input id="au" placeholder="Admin username"><input id="ap" type="password" placeholder="Password (min. 8)"><input id="ap2" type="password" placeholder="Repeat password"></div><p><b>Keep this password safe.</b> It cannot be recovered: if every administrator password is lost, the data cannot be opened. Download a backup first.</p><button class="b p" onclick="enableAuth()">Turn on user accounts</button></div>`;
+ const us=Object.entries(a.users).filter(([,u])=>!u.removed);
+ return`<div class="card"><h3>User accounts</h3><p>Signed in as <b>${esc(a.user)}</b> (${a.role}). Administrator: manage users, delete, backup. Editor: add and edit specimens. Viewer: read only.</p><div class="row"><input id="cp" type="password" placeholder="New password for my account"><button class="b" onclick="setPw('${a.user}','cp')">Change my password</button></div>
+ ${a.role=='admin'?`<table style="margin-top:12px"><tbody>${us.map(([n,u])=>`<tr><td><b>${esc(n)}</b><br><small>${esc(u.name)}</small></td><td><select onchange="setRole('${n}',this.value)">${['admin','editor','viewer'].map(r=>`<option ${r==u.role?'selected':''}>${r}</option>`).join('')}</select></td><td><input id="pw_${n}" type="password" placeholder="New password"></td><td><button class="b" onclick="setPw('${n}','pw_${n}')">Set</button> <button class="b d" onclick="rmUser('${n}')">Remove</button></td></tr>`).join('')}</tbody></table><div class="row" style="margin-top:12px"><input id="nu" placeholder="Username"><input id="nn" placeholder="Full name"><input id="np" type="password" placeholder="Temporary password"><select id="nr" style="width:auto"><option>editor</option><option>viewer</option><option>admin</option></select><button class="b p" onclick="addUser()">Add user</button></div>`:''}</div>`}
+
+/* ---------- online database (Supabase: free Postgres + auth) ---------- */
+const mark=id=>{(S.db.dirty=S.db.dirty||{})[id]=1},hhmm=()=>new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+let SY,busy=false,again=false;
+const sqlText=()=>`-- CHTC Collection Manager: run once in Supabase > SQL Editor
+create table if not exists public.specimens (
+  id text primary key,
+  upd bigint not null default 0,
+  deleted boolean not null default false,
+${K.map(k=>`  "${k.toLowerCase()}" text not null default ''`).join(',\n')}
+);
+${K.map(k=>`alter table public.specimens add column if not exists "${k.toLowerCase()}" text not null default '';`).join('\n')}
+create index if not exists specimens_upd_idx on public.specimens (upd);
+create unique index if not exists specimens_voucher_uq on public.specimens (lower(voucher)) where deleted = false and voucher <> '';
+create table if not exists public.profiles (
+  id uuid primary key references auth.users(id) on delete cascade,
+  email text, name text,
+  role text not null default 'pending' check (role in ('pending','viewer','editor','admin'))
+);
+create or replace function public.my_role() returns text language sql stable security definer set search_path = public as $$ select role from public.profiles where id = auth.uid() $$;
+create or replace function public.handle_new_user() returns trigger language plpgsql security definer set search_path = public as $$
+begin
+  insert into public.profiles (id, email, name, role) values (new.id, new.email, coalesce(new.raw_user_meta_data->>'name', new.email),
+    case when not exists (select 1 from public.profiles) then 'admin' else 'pending' end);
+  return new;
+end $$;
+drop trigger if exists on_auth_user_created on auth.users;
+create trigger on_auth_user_created after insert on auth.users for each row execute function public.handle_new_user();
+insert into public.profiles (id, email, name, role) select id, email, email, 'pending' from auth.users on conflict do nothing;
+update public.profiles set role = 'admin' where id = (select id from auth.users order by created_at limit 1) and not exists (select 1 from public.profiles where role = 'admin');
+alter table public.specimens enable row level security;
+alter table public.profiles enable row level security;
+revoke all on public.specimens, public.profiles from anon;
+grant select, insert, update, delete on public.specimens, public.profiles to authenticated;
+drop policy if exists sp_select on public.specimens;
+drop policy if exists sp_insert on public.specimens;
+drop policy if exists sp_update on public.specimens;
+drop policy if exists sp_delete on public.specimens;
+create policy sp_select on public.specimens for select to authenticated using (public.my_role() in ('viewer','editor','admin'));
+create policy sp_insert on public.specimens for insert to authenticated with check (public.my_role() = 'admin' or (public.my_role() = 'editor' and not deleted));
+create policy sp_update on public.specimens for update to authenticated using (public.my_role() = 'admin' or (public.my_role() = 'editor' and not deleted)) with check (public.my_role() = 'admin' or (public.my_role() = 'editor' and not deleted));
+create policy sp_delete on public.specimens for delete to authenticated using (public.my_role() = 'admin');
+drop policy if exists pr_select on public.profiles;
+drop policy if exists pr_update on public.profiles;
+create policy pr_select on public.profiles for select to authenticated using (id = auth.uid() or public.my_role() = 'admin');
+create policy pr_update on public.profiles for update to authenticated using (public.my_role() = 'admin') with check (public.my_role() = 'admin');`;
+async function rawAuth(path,body){const r=await fetch(S.set.sb.url+path,{method:'POST',headers:{apikey:S.set.sb.key,'Content-Type':'application/json'},body:JSON.stringify(body)});const d=await r.json().catch(()=>({}));
+ if(!r.ok)throw Object.assign(new Error(d.msg||d.error_description||d.message||d.error||'Request failed'),{status:r.status});return d}
+function setSess(d){S.sess={access:d.access_token,refresh:d.refresh_token,exp:Date.now()+(d.expires_in||3600)*1000,email:(d.user&&d.user.email)||(S.sess&&S.sess.email),uid:(d.user&&d.user.id)||(S.sess&&S.sess.uid)};S.set.sess=S.sess;saveSet()}
+async function fresh(){if(S.sess&&Date.now()>S.sess.exp-60000){try{setSess(await rawAuth('/auth/v1/token?grant_type=refresh_token',{refresh_token:S.sess.refresh}))}catch(e){if(e.status){S.sess=null;delete S.set.sess;saveSet();S.locked=true;render()}throw e}}}
+async function sb(path,o={}){await fresh();const r=await fetch(S.set.sb.url+path,{...o,headers:{apikey:S.set.sb.key,Authorization:'Bearer '+S.sess.access,'Content-Type':'application/json',...o.headers}});const t=await r.text();let d=null;try{d=t?JSON.parse(t):null}catch(e){}
+ if(!r.ok)throw Object.assign(new Error((d&&(d.message||d.msg||d.error_description))||t||r.statusText),{status:r.status});return d}
+async function loadRole(){const p=await sb('/rest/v1/profiles?select=role,name&id=eq.'+S.sess.uid);S.role=(p&&p[0]&&p[0].role)||'pending';S.uname=(p&&p[0]&&p[0].name)||S.sess.email;S.set.role=S.role;S.set.uname=S.uname;saveSet();
+ if(S.role=='pending')throw Object.assign(new Error('Your account is waiting for approval by an administrator.'),{pending:1})}
+function clearSess(){S.sess=null;delete S.set.sess;delete S.set.role;saveSet()}
+async function onlineAuth(signup){const email=$('#oe').value.trim(),pw=$('#op').value,b=$('#ob'),er=$('#oerr');er.textContent='';if(!email||!pw)return er.textContent='Enter your e-mail and password.';b.disabled=true;
+ try{let d;if(signup){if(pw.length<8)throw new Error('Password needs at least 8 characters.');d=await rawAuth('/auth/v1/signup',{email,password:pw,data:{name:email}});if(!d.access_token){er.textContent='Account created. Confirm it through the e-mail sent to you, then sign in.';b.disabled=false;return}}
+  else d=await rawAuth('/auth/v1/token?grant_type=password',{email,password:pw});
+  setSess(d);try{await loadRole()}catch(e){clearSess();throw e}
+  S.locked=false;S.page='dash';S.db.dirty=S.db.dirty||{};await syncOnline();clearInterval(SY);SY=setInterval(()=>syncOnline(true),60000);render()}
+ catch(e){er.textContent=e instanceof TypeError?'Cannot reach the online database. Check your internet connection.':e.message;b.disabled=false}}
+async function resume(){const s=S.set.sess;if(!s)return;S.sess={...s};
+ try{await fresh();await loadRole()}catch(e){if(e instanceof TypeError&&S.set.role){S.role=S.set.role;S.uname=S.set.uname}else{S.sess=null;return}}
+ S.locked=false;SY=setInterval(()=>syncOnline(true),60000);syncOnline(true)}
+async function pull(){const since=S.db.pulled||0;let off=0,mx=since,n=0;
+ for(;;){const rows=await sb(`/rest/v1/specimens?select=*&upd=gte.${since}&order=upd.asc,id.asc&limit=1000&offset=${off}`);
+  for(const w of rows){const id=w.id,u=+w.upd,loc=R().find(x=>x.id==id);if(u>mx)mx=u;if((loc||S.db.del[id])&&Math.max(loc?loc.upd:0,S.db.del[id]||0)>=u)continue;
+   delete S.db.dirty[id];S.db.records=R().filter(x=>x.id!=id);if(w.deleted)S.db.del[id]=u;else{const r={id,upd:u};K.forEach(k=>r[k]=w[k.toLowerCase()]??'');S.db.records.push(r);delete S.db.del[id]}n++}
+  if(rows.length<1000)break;off+=1000}
+ S.db.pulled=mx;if(n)await saveLocal();return n}
+async function push(){const ids=Object.keys(S.db.dirty||{});if(!ids.length)return;if(!can('edit')){S.db.dirty={};return}
+ const rec=[],del=[];ids.forEach(id=>{const r=R().find(x=>x.id==id);if(r){const o={id,upd:r.upd,deleted:false};K.forEach(k=>o[k.toLowerCase()]=r[k]||'');rec.push(o)}else if(S.db.del[id])del.push([id,S.db.del[id]]);else delete S.db.dirty[id]});
+ const up=a=>sb('/rest/v1/specimens?on_conflict=id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(a)});let bad=0,msg='';
+ for(let i=0;i<rec.length;i+=100){const b=rec.slice(i,i+100);try{await up(b);b.forEach(o=>delete S.db.dirty[o.id])}catch(e){if(!e.status)throw e;for(const o of b){try{await up([o]);delete S.db.dirty[o.id]}catch(e2){if(!e2.status)throw e2;bad++;msg=e2.message}}}}
+ for(const[id,t]of del){try{await sb('/rest/v1/specimens?id=eq.'+encodeURIComponent(id),{method:'PATCH',headers:{Prefer:'return=minimal'},body:JSON.stringify({deleted:true,upd:t})});delete S.db.dirty[id]}catch(e){if(!e.status)throw e;bad++;msg=e.message}}
+ await saveLocal();if(bad)toast(`${bad} record(s) could not be saved online: ${msg}`,1)}
+async function saveLocal(){const j=await pack();A?await A.write('db.json',j):localStorage.setItem('chtc_db',j)}
+async function syncOnline(quiet){if(!S.sess)return;if(busy){again=true;return}busy=true;
+ try{await push();const n=await pull();$('#stamp').textContent='Synced online · '+hhmm();if(n&&quiet&&!$('#modal').classList.contains('on')&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName))render();else if(n)render()}
+ catch(e){if(e instanceof TypeError)$('#stamp').textContent='Offline · changes sync when back online';else toast('Online sync: '+e.message,1)}
+ finally{busy=false;if(again){again=false;syncOnline(true)}}}
+async function logoutOnline(){await syncOnline();if(Object.keys(S.db.dirty||{}).length&&!confirm('Some changes are not synced online yet and will be lost. Sign out anyway?'))return;
+ clearInterval(SY);clearSess();await saveSet();S.db={records:[],del:{},dirty:{},pulled:0};await saveLocal();S.locked=true;S.page='dash';render()}
+function onlineLock(){return`<div class="card" style="max-width:420px;margin:7vh auto 0;text-align:center"><img src="assets/logo.png" alt="CHTC" style="width:260px;max-width:80%"><h3 style="margin:14px 0">Sign in to the collection database</h3><div style="display:grid;gap:8px"><input id="oe" type="email" placeholder="E-mail" autocomplete="username"><input id="op" type="password" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key==='Enter')onlineAuth()"><div class="err" id="oerr" style="margin:0"></div><button class="b p" id="ob" onclick="onlineAuth()">Sign in</button><button class="b" onclick="onlineAuth(1)">Create account</button><a href="#" style="font-size:12px;color:var(--mut)" onclick="discSb();return false">Change online database connection</a></div></div>`}
+async function connectSb(){const url=$('#sbu').value.trim().replace(/\/+$/,''),key=$('#sbk').value.trim();if(!/^https:\/\/[^\/\s]+$/.test(url)||key.length<30)return toast('Check the Project URL (https://xxxx.supabase.co) and the anon public key.',1);
+ try{const r=await fetch(url+'/auth/v1/settings',{headers:{apikey:key}});if(!r.ok)throw new Error('The server rejected the key (HTTP '+r.status+').')}catch(e){return toast('Could not connect: '+(e instanceof TypeError?'no internet or wrong URL.':e.message),1)}
+ S.set.sb={url,key};await saveSet();R().forEach(r=>mark(r.id));S.locked=true;await saveLocal();render();toast('Connected. Sign in or create the first account (it becomes administrator).')}
+async function discSb(){if(!confirm('Disconnect from the online database? Data already online stays there.'))return;clearInterval(SY);clearSess();delete S.set.sb;await saveSet();S.locked=false;S.role=null;render()}
+async function loadTeam(){try{const p=await sb('/rest/v1/profiles?select=id,email,name,role&order=email.asc'),t=$('#team');if(!t)return;
+ t.innerHTML=`<table><tbody>${p.map(x=>`<tr><td>${esc(x.email)}</td><td><select ${x.id==S.sess.uid?'disabled':''} onchange="setProf('${esc(x.id)}',this.value)">${['pending','viewer','editor','admin'].map(r=>`<option ${r==x.role?'selected':''}>${r}</option>`).join('')}</select></td></tr>`).join('')}</tbody></table>`}catch(e){}}
+async function setProf(id,r){try{await sb('/rest/v1/profiles?id=eq.'+encodeURIComponent(id),{method:'PATCH',headers:{Prefer:'return=minimal'},body:JSON.stringify({role:r})});toast('Role updated')}catch(e){toast(e.message,1);loadTeam()}}
+function copySql(){const t=$('#sql');t.select();navigator.clipboard?navigator.clipboard.writeText(t.value).then(()=>toast('SQL copied')):(document.execCommand('copy'),toast('SQL copied'))}
+function onlineCard(){if(S.auth.on)return`<div class="card"><h3>Online database</h3><p>Turn-off of local encrypted accounts is not available; online accounts replace them. Use a fresh install to connect.</p></div>`;
+ if(!S.set.sb)return`<div class="card"><h3>Online database (free)</h3><p>Host the collection in a free online <b>Supabase</b> database, with real sign-in and roles. Set-up, about 10 minutes, once:</p>
+ <p>1. Create a free account and a <b>New project</b> at supabase.com (region: South America). Save the database password.<br>2. Open <b>SQL Editor → New query</b>, paste the script below and click <b>Run</b>.<br>3. Open <b>Project Settings → API</b> and copy the <b>Project URL</b> and the <b>anon public</b> key into the boxes below.<br>4. Recommended: <b>Authentication → Sign In / Providers → Email</b>: turn off "Confirm email".<br>5. Click <b>Connect</b>, then create your account. The first account becomes administrator.</p>
+ <textarea id="sql" readonly style="height:120px;font:11px ui-monospace,Menlo,Consolas,monospace">${esc(sqlText())}</textarea><div class="row" style="margin:8px 0"><button class="b" onclick="copySql()">Copy SQL</button></div>
+ <div class="row"><input id="sbu" placeholder="Project URL (https://xxxx.supabase.co)"><input id="sbk" placeholder="anon public key"><button class="b p" onclick="connectSb()">Connect</button></div></div>`;
+ return`<div class="card"><h3>Online database</h3><p>Connected to <code>${esc(S.set.sb.url)}</code><br>Signed in as <b>${esc(S.uname||'')}</b> (${S.role}). Changes sync automatically; works offline and syncs later.</p><div class="row"><button class="b" onclick="syncOnline().then(()=>toast('Synchronized'))">Sync now</button><button class="b d" onclick="discSb()">Disconnect</button></div>
+ ${S.role=='admin'?'<h3 style="margin-top:16px">Team and roles</h3><p>New accounts start as <b>pending</b> until you give them a role. To remove a person, delete the user in Supabase → Authentication → Users.</p><div id="team"></div>':''}</div>`}
+
+/* ---------- helpers ---------- */
+const R=()=>S.db.records,hasGeo=r=>r.lat!==''&&r.lon!==''&&isFinite(+r.lat)&&isFinite(+r.lon);
+const hasTissue=v=>{v=String(v||'').trim().toLowerCase();return v!==''&&v!=='none'};
+const dparse=v=>/^\d{4}-\d{2}-\d{2}$/.test(v||'')?new Date(v+'T00:00:00'):null,fmtD=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+function loanDue(r){const d=dparse(r.loanDate),p=+r.loanPeriod;if(!d||!(p>0))return null;d.setDate(d.getDate()+Math.round(p));return d}
+function loanState(r){if(r.loanReturned||!r.loanDate)return null;const due=loanDue(r);if(!due)return{st:'open',due:null,days:null};const t=new Date();t.setHours(0,0,0,0);const days=Math.round((due-t)/864e5);return{st:days<0?'over':days<=7?'soon':'ok',due,days}}
+const loans=()=>R().map(r=>[r,loanState(r)]).filter(x=>x[1]);
+function loanBanner(){const l=loans().filter(x=>x[1].st=='over'||x[1].st=='soon').sort((a,b)=>a[1].days-b[1].days);if(!l.length)return'';const o=l.filter(x=>x[1].st=='over').length;
+ return`<div class="card" style="border-color:${o?'#c33':'var(--a)'};background:${o?'#fdf0ee':'#fff8ea'};margin-bottom:16px"><b>${o?`⚠ ${o} loan${o>1?'s':''} overdue`:'Loans due soon'}${l.length>o?` · ${l.length-o} due within 7 days`:''}</b>${l.slice(0,6).map(([r,s])=>`<div style="margin-top:6px;cursor:pointer" onclick="openEdit('${r.id}')"><b>${esc(r.voucher)}</b> · <em>${esc(sp(r))}</em> · ${esc(r.loanBorrower||'—')}${r.loanInst?', '+esc(r.loanInst):''} · due ${fmtD(s.due)} (${s.days<0?-s.days+' day(s) overdue':s.days==0?'today':'in '+s.days+' day(s)'})</div>`).join('')}${l.length>6?`<div class="sub" style="margin:6px 0 0">+${l.length-6} more (see the Specimens list, filter "Overdue")</div>`:''}</div>`}
+const loanPill=r=>{const s=loanState(r);return s?` <span class="pill ${s.st=='over'||s.st=='soon'?'x':''}">${s.st=='over'?'Loan overdue':s.st=='soon'?'Loan due soon':'On loan'}</span>`:''};
+function loanNote(){const f=$('#f'),n=$('#ld');if(!f||!n)return;const r={};['loanDate','loanPeriod','loanReturned'].forEach(k=>r[k]=f[k].value.trim());const s=loanState(r),d=loanDue(r);
+ n.innerHTML=(r.loanReturned?'Returned on '+esc(r.loanReturned)+'.':d?`Due date: <b>${fmtD(d)}</b>${s.days<0?` · <b style="color:#c33">overdue by ${-s.days} day(s)</b>`:s.days==0?' · due today':` · ${s.days} day(s) left`}.`:'Enter Loan Date and Loan Period to calculate the due date.')+' <span style="color:var(--mut)">Loan data is private and is not included in the Darwin Core export.</span>'}
+const yes=v=>/^(y|yes|s|sim|1|true)/i.test(v||'');
+const cnt=f=>{const m={};R().forEach(r=>{const v=f(r);if(v)m[v]=(m[v]||0)+1});return Object.entries(m).sort((a,b)=>b[1]-a[1])};
+const uniq=k=>[...new Set(R().map(r=>r[k]).filter(Boolean))].sort();
+const epi=r=>{const g=(r.genus||'').trim(),e=(r.species||'').trim();return g&&e.toLowerCase().startsWith(g.toLowerCase()+' ')?e.slice(g.length+1).trim():e};
+const sp=r=>((r.genus||'')+' '+epi(r)).trim();
+function download(name,text,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),999)}
+function pick(cb){const i=$('#fi');i.value='';i.onchange=()=>{const f=i.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>cb(rd.result);rd.readAsText(f)};i.click()}
+const today=()=>new Date().toISOString().slice(0,10);
+
+/* ---------- render ---------- */
+function render(){document.body.classList.toggle('lk',S.locked);const a=S.auth;$('#acct').innerHTML=S.set.sb?(S.sess&&!S.locked?`${esc(S.uname||S.sess.email)} · ${S.role}<br><a href="#" onclick="logout();return false">Sign out</a>`:''):a.user?`${esc((a.users[a.user]||{}).name||a.user)} · ${a.role}<br><a href="#" onclick="logout();return false">Sign out</a>`:'';
+ if(S.locked){$('#nav').innerHTML='';$('#main').innerHTML=lockHTML();return}
+ $('#nav').innerHTML=NAV.map(([k,l])=>`<button class="${S.page==k?'on':''}" onclick="go('${k}')"><svg viewBox="0 0 24 24">${ICON[k]}</svg>${l}</button>`).join('');
+ if(!S.lw&&R().length){const o=loans().filter(x=>x[1].st=='over').length;if(o){S.lw=1;toast('⚠ '+o+' loan'+(o>1?'s are':' is')+' overdue',1)}}
+ $('#main').innerHTML=loanBanner()+{dash,list,map,set}[S.page]();if(S.page=='map')drawMap();if(S.page=='set'&&S.set.sb&&S.role=='admin')loadTeam()}
+function go(p){S.page=p;render()}
+const PAL=['#1f5c45','#c9871f','#3f7fa6','#a34a4a','#6b5b95','#7a8a3a','#6d6d6d','#b86b9e'];
+function bars(t,e,n=10,it){const mx=e[0]?e[0][1]:1;return`<div class="card"><h3>${t}</h3>${e.slice(0,n).map(([k,v])=>`<div class="br"><span title="${esc(k)}">${it?`<em>${esc(k)}</em>`:esc(k)}</span><div class="tr"><i style="width:${v/mx*100}%"></i></div><b>${v}</b></div>`).join('')||'<span class="sub">No data yet</span>'}</div>`}
+function donut(t,e){const tot=e.reduce((s,x)=>s+x[1],0);let a=0;const g=e.map(([k,v],i)=>{const s=a;a+=v/tot*100;return`${PAL[i%8]} ${s}% ${a}%`}).join(',');
+ return`<div class="card"><h3>${t}</h3>${tot?`<div class="dn"><div class="ring" style="background:conic-gradient(${g})"></div><div class="lg">${e.slice(0,8).map(([k,v],i)=>`<div><i style="background:${PAL[i]}"></i>${esc(k)} · ${v}</div>`).join('')}</div></div>`:'<span class="sub">No data yet</span>'}</div>`}
+function dash(){const r=R(),n=r.length,st=(l,v)=>`<div class="card"><b>${v}</b><span>${l}</span></div>`;
+ const yr=cnt(x=>(x.date||'').slice(0,4)).sort((a,b)=>a[0]-b[0]),mx=Math.max(1,...yr.map(y=>y[1])),step=Math.ceil(yr.length/14);
+ return`<div class="card hero"><img src="assets/logo.png" alt="CHTC"><div><h1>Collection overview</h1><p>${n?'Quantitative summary of all registered specimens.':'No specimens yet. Add the first one or import your spreadsheet.'}</p></div></div>
+ <div class="stats">${st('Specimens',n)}${st('Species',new Set(r.filter(x=>x.species).map(sp)).size)}${st('Genera',uniq('genus').length)}${st('Families',uniq('family').length)}${st('With tissue',r.filter(x=>hasTissue(x.tissueSample)).length)}${st('On loan',loans().length)}${st('Loans overdue',loans().filter(x=>x[1].st=='over').length)}${st('Georeferenced',r.filter(hasGeo).length)}</div>
+ <div class="grid">${donut('Specimens by order',cnt(x=>x.order))}${donut('Status',cnt(x=>x.status))}${donut('Sex',cnt(x=>x.sex))}${donut('Tissue samples',cnt(x=>hasTissue(x.tissueSample)?'With tissue':'No tissue'))}
+ ${bars('Top families',cnt(x=>x.family),12)}${bars('Top genera',cnt(x=>x.genus),12,1)}${bars('States',cnt(x=>x.state))}${bars('Preparation',cnt(x=>x.prep))}
+ <div class="card wide"><h3>Specimens collected per year</h3>${yr.length?`<div class="cols">${yr.map(([y,v],i)=>`<div title="${y}: ${v}"><i style="height:${v/mx*100}%"></i>${i%step?'':y}</div>`).join('')}</div>`:'<span class="sub">No collection dates yet</span>'}</div></div>`}
+function filtered(){const q=S.q.toLowerCase();let l=R().filter(r=>(!S.fam||r.family==S.fam)&&(!S.st||r.status==S.st)&&(!S.ln||(S.ln=='over'?(loanState(r)||{}).st=='over':!!loanState(r)))&&(!q||K.some(k=>String(r[k]).toLowerCase().includes(q))));
+ const k=S.sort;return l.sort((a,b)=>String(k=='sp'?sp(a):a[k]).localeCompare(String(k=='sp'?sp(b):b[k]),undefined,{numeric:true})*S.dir)}
+const COLS=[['voucher','Voucher'],['sp','Species'],['family','Family'],['country','Country'],['state','State'],['date','Collected'],['sex','Sex'],['status','Status']];
+function list(){const l=filtered(),o=v=>`<option value="${esc(v)}">${esc(v)}</option>`;
+ const tb=`<div class="tb"><input id="q" placeholder="Search any field…" value="${esc(S.q)}" oninput="S.q=this.value;fillRows()"><select onchange="S.fam=this.value;render()"><option value="">All families</option>${uniq('family').map(o).join('')}</select><select onchange="S.st=this.value;render()"><option value="">All status</option>${uniq('status').map(o).join('')}</select><select onchange="S.ln=this.value;render()"><option value="">All loan states</option><option value="active" ${S.ln=='active'?'selected':''}>On loan</option><option value="over" ${S.ln=='over'?'selected':''}>Overdue</option></select><span class="sp"></span>
+ ${can('edit')?'<button class="b" onclick="impCSV()">Import CSV</button>':''}<button class="b" onclick="expCSV()">Export CSV</button><button class="b" onclick="expDwC()" title="Darwin Core occurrence table">Export Darwin Core</button>${can('edit')?'<button class="b p" onclick="openEdit()">+ New specimen</button>':''}</div>`;
+  if(!R().length)return`<h1>Specimens</h1><p class="sub">Your collection database</p>${tb}<div class="card empty"><img src="assets/logo.png" alt=""><p>The collection is empty. Add a specimen or import a CSV/TSV with your existing columns.</p></div>`;
+ return`<h1>Specimens</h1><p class="sub" id="cn">${l.length} of ${R().length} specimens</p>${tb}<div class="tw"><table><thead><tr>${COLS.map(([k,t])=>`<th onclick="sortBy('${k}')">${t}${S.sort==k?(S.dir>0?' ▲':' ▼'):''}</th>`).join('')}</tr></thead><tbody id="rows">${rows(l)}</tbody></table></div>`}
+function rows(l){return l.map(r=>`<tr class="r" onclick="openEdit('${r.id}')"><td><b>${esc(r.voucher)}</b>${loanPill(r)}</td><td><em>${esc(sp(r))}</em></td><td>${esc(r.family)}</td><td>${esc(r.country)}</td><td>${esc(r.state)}</td><td>${esc(r.date)}</td><td>${esc(r.sex)}</td><td>${r.status?`<span class="pill ${/miss|destroy/i.test(r.status)?'x':''}">${esc(r.status)}</span>`:''}</td></tr>`).join('')}
+function fillRows(){const l=filtered();$('#rows').innerHTML=rows(l);$('#cn').textContent=`${l.length} of ${R().length} specimens`}
+function sortBy(k){S.dir=S.sort==k?-S.dir:1;S.sort=k;render()}
+
+/* ---------- record form ---------- */
+function nextVoucher(){const v=R().map(r=>r.voucher).filter(x=>/\d+$/.test(x));if(!v.length)return'CHTC 1';const best=v.map(x=>[x,+x.match(/\d+$/)[0]]).sort((a,b)=>b[1]-a[1])[0][0],m=best.match(/^(.*?)(\d+)$/);return m[1]+String(+m[2]+1).padStart(m[2].length,'0')}
+function openEdit(id,copy){const ro=!can('edit');if(ro&&!id)return toast('Your account is read-only.',1);const ex=R().find(r=>r.id==id),r=ex?{...ex}:{};if(copy){delete r.id;r.voucher=nextVoucher()}if(!ex&&!copy){K.forEach(k=>r[k]='');r.voucher=nextVoucher();r.depDate=today()}
+ S.edit={id:copy?null:ex&&ex.id};const secs=[...new Set(F.map(f=>f[2]))];
+ const dl=K.map(k=>`<datalist id="dl_${k}">${[...new Set([...(L[k]||[]),...uniq(k)])].slice(0,400).map(v=>`<option value="${esc(v)}">`).join('')}</datalist>`).join('');
+ $('#mb').innerHTML=`<h2>${S.edit.id?'Edit specimen · '+esc(r.voucher):'New specimen'}</h2>${dl}<form id="f" onsubmit="return false" oninput="loanNote()">${secs.map(s=>`<fieldset><legend>${s}</legend><div class="g">${F.filter(f=>f[2]==s).map(([k,l,,t,ph])=>`<label class="${t=='a'?'w2':''}">${l}<span class="dw">${DWC[k]||''}</span>${t=='a'?`<textarea name="${k}" ${ro?'disabled':''}>${esc(r[k])}</textarea>`:`<input name="${k}" value="${esc(r[k]||'')}" list="dl_${k}" placeholder="${ph||''}" autocomplete="off" ${ro?'disabled':''} ${k=='lat'||k=='lon'?'oninput="prevMap()"':''}>`}</label>`).join('')}</div>${s=='Locality'?'<div class="pm" id="pm"></div>':''}${s=='Loan'?'<p class="sub" id="ld" style="margin:10px 0 0"></p>':''}</fieldset>`).join('')}</form>
+ <div class="ft"><span class="err" id="err"></span><span class="sp"></span>${S.edit.id&&can('admin')?`<button class="b d" onclick="delRec()">Delete</button>`:''}${S.edit.id&&!ro?`<button class="b" onclick="openEdit('${S.edit.id}',1)">Duplicate</button>`:''}<button class="b" onclick="closeM()">${ro?'Close':'Cancel'}</button>${ro?'':'<button class="b p" onclick="saveRec()">Save specimen</button>'}</div>`;
+ $('#modal').classList.add('on');prevMap();loanNote()}
+function closeM(){stopCam();$('#modal').classList.remove('on')}
+document.addEventListener('keydown',e=>{if(e.key=='Escape')closeM()});
+/* USB QR/barcode scanners act as a keyboard: fast keystrokes ending in Enter. Works without clicking any field. */
+let SB='',ST=0;
+document.addEventListener('keydown',e=>{if(S.locked||e.ctrlKey||e.metaKey||e.altKey)return;const t=e.target,tag=t&&t.tagName,typing=/INPUT|TEXTAREA|SELECT/.test(tag);if(typing||$('#modal').classList.contains('on'))return;
+ const now=Date.now();if(now-ST>80)SB='';ST=now;
+ if(e.key=='Enter'||e.key=='Tab'){if(SB.length>=3){e.preventDefault();const v=SB;SB='';quick(v)}else SB='';return}
+ if(e.key.length==1){SB+=e.key;if(SB.length>2)e.preventDefault()}});
+function prevMap(){const f=$('#f');if(!f)return;const la=f.lat.value.replace(',','.'),lo=f.lon.value.replace(',','.'),ok=la!==''&&lo!==''&&isFinite(+la)&&isFinite(+lo);
+ $('#pm').innerHTML=ok?`<iframe loading="lazy" src="https://maps.google.com/maps?q=${la},${lo}&z=13&output=embed"></iframe>`:'Enter latitude and longitude (decimal degrees) to preview the location on Google Maps'}
+async function saveRec(){if(!can('edit'))return toast('Your account is read-only.',1);const fd=new FormData($('#f')),r={};K.forEach(k=>r[k]=(fd.get(k)||'').trim());['lat','lon','mass','svl','tail'].forEach(k=>r[k]=r[k].replace(',','.'));
+ const bad=k=>r[k]!==''&&!isFinite(+r[k]);let e='';
+ if(!r.voucher)e='Voucher Number is required.';else if(R().some(x=>x.voucher.toLowerCase()==r.voucher.toLowerCase()&&x.id!=S.edit.id))e='This Voucher Number already exists.';
+ else if(r.date&&!/^\d{4}(-(0[1-9]|1[0-2])(-(0[1-9]|[12]\d|3[01]))?)?$/.test(r.date))e='Date collected must be YYYY-MM-DD.';
+ else if(bad('lat')||bad('lon')||(r.lat!==''&&Math.abs(+r.lat)>90)||(r.lon!==''&&Math.abs(+r.lon)>180))e='Coordinates must be decimal degrees (lat −90…90, lon −180…180).';
+ else if(bad('mass')||bad('svl')||bad('tail'))e='Mass, SVL and Tail must be numbers.';
+ else if((r.loanDate&&!dparse(r.loanDate))||(r.loanReturned&&!dparse(r.loanReturned)))e='Loan dates must be YYYY-MM-DD.';
+ else if(bad('loanPeriod')||(r.loanPeriod!==''&&+r.loanPeriod<=0))e='Loan Period must be a positive number of days.';
+ else if(r.loanEmail&&!/^\S+@\S+\.\S+$/.test(r.loanEmail))e='The borrower email looks invalid.';
+ if(e)return $('#err').textContent=e;
+ r.id=S.edit.id||Date.now().toString(36)+Math.random().toString(36).slice(2,6);r.upd=Date.now();
+ S.db.records=R().filter(x=>x.id!=r.id).concat(r);delete S.db.del[r.id];mark(r.id);await persist();closeM();render();toast('Specimen saved')}
+async function delRec(){if(!can('admin'))return toast('Only administrators can delete specimens.',1);if(!confirm('Delete this specimen permanently?'))return;S.db.records=R().filter(x=>x.id!=S.edit.id);S.db.del[S.edit.id]=Date.now();mark(S.edit.id);await persist();closeM();render();toast('Specimen deleted')}
+
+/* ---------- QR scan ---------- */
+function findByScan(t){t=String(t).trim();const c=[t,t.split(/\r?\n/)[0]];try{const u=new URL(t);['voucher','v','id','catalogNumber'].forEach(k=>u.searchParams.get(k)&&c.push(u.searchParams.get(k)));c.push(decodeURIComponent(u.pathname.split('/').pop()||''))}catch(e){}
+ if(t.includes(':'))c.push(t.split(':').pop());const m=t.match(/voucher\s*[:=]\s*(.+)/i);if(m)c.push(m[1].trim());
+ for(const x of c){const n=norm(x);if(n){const r=R().find(r=>norm(r.voucher)==n);if(r)return[r,x]}}return[null,c[1]]}
+function quick(v,cam){if(!String(v).trim())return;const[r,x]=findByScan(v);if(r){openEdit(r.id);const i=$('#qs');if(i)i.value='';return}
+ if(cam)closeM();if(!can('edit'))return toast('No specimen with voucher "'+x+'" was found.',1);if(confirm(`No specimen with Voucher Number "${x}" was found.\nCreate a new specimen with this voucher?`)){openEdit();$('#f').voucher.value=x}else if(cam)scanOpen()}
+let CAM=null,CT=null;
+function stopCam(){clearInterval(CT);if(CAM){CAM.getTracks().forEach(t=>t.stop());CAM=null}}
+function loadQR(){return new Promise((res,rej)=>{if(window.jsQR)return res();const u=['node_modules/jsqr/dist/jsQR.js','jsQR.js','https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js','https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js'],t=i=>{if(i>=u.length)return rej(new Error('QR decoder not found'));const e=document.createElement('script');e.src=u[i];e.onload=res;e.onerror=()=>t(i+1);document.head.appendChild(e)};t(0)})}
+async function scanOpen(dev){stopCam();
+ $('#mb').innerHTML=`<h2>Scan QR code</h2><div class="pm" style="height:380px;background:#000;margin:0 0 10px"><video id="vd" muted playsinline style="width:100%;height:100%;object-fit:cover"></video></div><p class="sub" id="sm">Point the camera at the QR code on the specimen label…</p><div class="ft"><select id="cams" style="width:auto;max-width:320px" onchange="scanOpen(this.value)"></select><span class="sp"></span><button class="b" onclick="closeM()">Close</button></div>`;$('#modal').classList.add('on');
+ try{await loadQR();CAM=await navigator.mediaDevices.getUserMedia({video:dev?{deviceId:{exact:dev}}:{facingMode:'environment'}})}catch(e){const m=$('#sm');if(m)m.textContent='Camera unavailable ('+e.message+'). A USB barcode/QR scanner also works: click "Scan or type voucher" and scan.';return}
+ if(!$('#modal').classList.contains('on'))return stopCam();
+ const v=$('#vd');v.srcObject=CAM;await v.play();const cur=CAM.getVideoTracks()[0].getSettings().deviceId;
+ $('#cams').innerHTML=(await navigator.mediaDevices.enumerateDevices()).filter(d=>d.kind=='videoinput').map(d=>`<option value="${esc(d.deviceId)}" ${d.deviceId==cur?'selected':''}>${esc(d.label||'Camera')}</option>`).join('');
+ const c=document.createElement('canvas'),x=c.getContext('2d',{willReadFrequently:true});
+ CT=setInterval(()=>{if(!v.videoWidth)return;const w=Math.min(720,v.videoWidth),h=Math.round(w*v.videoHeight/v.videoWidth);c.width=w;c.height=h;x.drawImage(v,0,0,w,h);const r=jsQR(x.getImageData(0,0,w,h).data,w,h);if(r&&r.data){stopCam();quick(r.data,true)}},180)}
+
+/* ---------- import / export ---------- */
+function parseCSV(t){t=t.replace(/^\uFEFF/,'');const h=t.split(/\r?\n/)[0],d=['\t',';',','].map(x=>[x,h.split(x).length]).sort((a,b)=>b[1]-a[1])[0][0],rows=[];let row=[],c='',q=false;
+ for(let i=0;i<t.length;i++){const ch=t[i];if(q){if(ch=='"'){if(t[i+1]=='"'){c+='"';i++}else q=false}else c+=ch}else if(ch=='"')q=true;else if(ch==d){row.push(c);c=''}else if(ch=='\n'||ch=='\r'){if(ch=='\r'&&t[i+1]=='\n')i++;row.push(c);c='';rows.push(row);row=[]}else c+=ch}
+ if(c!==''||row.length){row.push(c);rows.push(row)}return rows.filter(r=>r.some(x=>x.trim()))}
+function impCSV(){if(!can('edit'))return toast('Your account is read-only.',1);pick(async t=>{const rows=parseCSV(t);if(rows.length<2)return toast('The file has no data rows.',1);
+ const map={};F.forEach(f=>map[norm(f[1])]=f[0]);Object.assign(map,ALIAS);const cols=rows[0].map(h=>map[norm(h)]);
+ if(!cols.includes('voucher'))return toast('Column "Voucher Number" not found in the header row.',1);
+ let add=0,upd=0,skip=0;rows.slice(1).forEach(row=>{const r={};K.forEach(k=>r[k]='');cols.forEach((k,i)=>{if(k)r[k]=(row[i]||'').trim()});
+  if(!r.voucher){skip++;return}const ex=R().find(x=>x.voucher.toLowerCase()==r.voucher.toLowerCase());
+  r.id=ex?ex.id:Date.now().toString(36)+Math.random().toString(36).slice(2,7);r.upd=Date.now();
+  S.db.records=R().filter(x=>x.id!=r.id).concat(r);mark(r.id);ex?upd++:add++});
+ await persist();render();toast(`Imported: ${add} new, ${upd} updated${skip?', '+skip+' skipped (no voucher)':''}`)})}
+const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
+function expCSV(){download(`CHTC_collection_${today()}.csv`,'\uFEFF'+[F.map(f=>q(f[1])).join(',')].concat(filtered().map(r=>K.map(k=>q(r[k])).join(','))).join('\r\n'),'text/csv')}
+function expKML(){const g=R().filter(hasGeo);if(!g.length)return toast('No georeferenced specimens yet.',1);
+ download('CHTC_specimens.kml',`<?xml version="1.0" encoding="UTF-8"?><kml xmlns="http://www.opengis.net/kml/2.2"><Document><name>CHTC specimens</name>${g.map(r=>`<Placemark><name>${esc(r.voucher)}</name><description>${esc(sp(r)+' — '+[r.locality,r.municipality,r.state,r.country].filter(Boolean).join(', '))}</description><Point><coordinates>${+r.lon},${+r.lat},0</coordinates></Point></Placemark>`).join('')}</Document></kml>`,'application/vnd.google-earth.kml+xml')}
+
+/* ---------- map ---------- */
+function map(){const n=R().filter(hasGeo).length;
+ const bar=`<div class="tb"><input placeholder="Filter by species, voucher, locality…" value="${esc(S.mq)}" oninput="S.mq=this.value;drawMap()"><span class="sub" id="mc" style="margin:0">${n} georeferenced</span><span class="sp"></span><button class="b" onclick="expKML()">Export KML (Google My Maps)</button></div>`;
+ if(!S.set.mapsKey)return`<h1>Map</h1><p class="sub">All specimens on Google Maps</p>${bar}<div class="card set"><h3>Connect Google Maps</h3><p>To see every specimen on one interactive Google map, add a free <b>Maps JavaScript API</b> key in Settings. Until then, each specimen's own location is already shown on Google Maps inside its record, and you can export a KML file and import it into <b>Google My Maps</b>.</p><div><button class="b p" onclick="go('set')">Open Settings</button></div></div>`;
+ return`<h1>Map</h1><p class="sub">All specimens on Google Maps</p>${bar}<div id="gm"></div>`}
+function loadMaps(){return new Promise((res,rej)=>{if(window.google&&google.maps)return res();window.__gm=res;window.gm_authFailure=()=>toast('Google rejected the API key. Check it in Settings.',1);const s=document.createElement('script');s.src='https://maps.googleapis.com/maps/api/js?key='+encodeURIComponent(S.set.mapsKey)+'&callback=__gm';s.onerror=()=>rej(new Error('offline'));document.head.appendChild(s)})}
+let GM,MK=[],IW;
+async function drawMap(){if(!S.set.mapsKey||!$('#gm'))return;try{await loadMaps()}catch(e){return toast('Could not load Google Maps (check your internet connection).',1)}
+ if(!$('#gm'))return;GM=new google.maps.Map($('#gm'),{center:{lat:-14,lng:-52},zoom:4,mapTypeId:'terrain',streetViewControl:false});IW=new google.maps.InfoWindow();
+ const q=S.mq.toLowerCase(),l=R().filter(r=>hasGeo(r)&&(!q||K.some(k=>String(r[k]).toLowerCase().includes(q)))),b=new google.maps.LatLngBounds();
+ l.forEach(r=>{const p={lat:+r.lat,lng:+r.lon},m=new google.maps.Marker({position:p,map:GM,title:r.voucher});b.extend(p);
+  m.addListener('click',()=>{IW.setContent(`<div style="font:13px sans-serif"><b>${esc(r.voucher)}</b><br><i>${esc(sp(r))}</i><br>${esc([r.municipality,r.state,r.country].filter(Boolean).join(', '))}<br><a href="#" onclick="openEdit('${r.id}');return false">Open record</a></div>`);IW.open(GM,m)})});
+ if(l.length)GM.fitBounds(b);if(l.length==1)GM.setZoom(11);$('#mc').textContent=l.length+' shown'}
+
+/* ---------- settings ---------- */
+function set(){return`<h1>Settings</h1><p class="sub">Storage, cloud and maps</p><div class="set">
+ <div class="card"><h3>Local storage</h3><p>Your data is saved automatically on this computer after every change${A?' (with an automatic backup copy)':' (in this browser)'}.</p><div class="row">${can('admin')?`<button class="b" onclick="expBackup()">Download full backup${S.auth.on?' (encrypted)':' (JSON)'}</button><button class="b" onclick="impJSON()">Restore / merge backup</button>`:'<span class="sub">Backups are available to administrators.</span>'}</div></div>
+ ${usersCard()}${onlineCard()}
+ ${S.set.sb?'':`<div class="card"><h3>Cloud folder (alternative to the online database)</h3><p>Pick a folder that is synced by <b>Google Drive, Dropbox or OneDrive</b>. The database is saved there as <code>${CF}</code> on every change. Other computers using the same folder are merged automatically (newest edit wins).</p>
+ ${A?`<div class="row"><input readonly value="${esc(S.set.cloud||'No folder selected')}"><button class="b p" onclick="pickCloud()">Choose folder</button>${S.set.cloud?'<button class="b" onclick="syncNow()">Sync now</button><button class="b d" onclick="offCloud()">Disconnect</button>':''}</div>`:'<p>Cloud folder is available in the desktop app.</p>'}</div>`}
+ <div class="card"><h3>Darwin Core</h3><p>Values added to every record in the Darwin Core export (<code>basisOfRecord</code> = PreservedSpecimen, kingdom Animalia, phylum Chordata, class derived from Order). Field names in the app stay as they are; each field shows its Darwin Core term.</p><div class="row"><input id="d1" placeholder="institutionCode" value="${esc(dw().inst)}"><input id="d2" placeholder="collectionCode" value="${esc(dw().coll)}"><input id="d3" placeholder="geodeticDatum" value="${esc(dw().datum)}"></div><div class="row" style="margin-top:8px"><button class="b p" onclick="S.set.dwc={inst:$('#d1').value.trim(),coll:$('#d2').value.trim(),datum:$('#d3').value.trim()};saveSet();toast('Darwin Core settings saved')">Save</button></div></div>
+ <div class="card"><h3>Google Maps</h3><p>Paste a <b>Maps JavaScript API</b> key from Google Cloud Console to enable the all-specimens map. Google provides a monthly free usage credit.</p><div class="row"><input id="mk" placeholder="AIza…" value="${esc(S.set.mapsKey||'')}"><button class="b p" onclick="S.set.mapsKey=$('#mk').value.trim();saveSet();toast('Maps key saved')">Save key</button></div></div>
+ <div class="card"><h3>About</h3><p>CHTC Collection Manager 1.0 · Coleção Herpetológica Teresa Cristina Sauer de Avila-Pires · Cururu Lab, UNIFESP.</p></div></div>`}
+function impJSON(){if(!can('admin'))return toast('Only administrators can restore backups.',1);pick(async t=>{try{await ingest(JSON.parse(t));R().forEach(r=>mark(r.id));await persist();render();toast('Backup merged')}catch(e){toast('Invalid backup file.',1)}})}
+async function pickCloud(){const f=await A.pickFolder();if(!f)return;S.set.cloud=f;await saveSet();await persist();render();toast('Cloud folder connected')}
+async function offCloud(){delete S.set.cloud;await saveSet();render()}
+async function syncNow(){await persist();render();toast('Synchronized')}
+
+load().then(async()=>{if(S.set.sb){S.locked=true;await resume()}
+ else{if(!S.env&&S.set.cloud&&A){try{const t=await A.cloudRead(S.set.cloud,CF),o=t&&JSON.parse(t);if(o&&o.v==2){S.env=o;S.locked=true}}catch(e){}}
+  if(!S.locked){if(S.set.cloud&&A)await persist();else $('#stamp').textContent=A?'Data stored locally':'Browser storage'}}
+ render()});
+if('serviceWorker' in navigator&&/^https?:/.test(location.protocol))navigator.serviceWorker.register('sw.js').catch(()=>{});
+setInterval(()=>{if(!S.locked&&!$('#modal').classList.contains('on')&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName))render()},3600000);
+</script></body></html>
